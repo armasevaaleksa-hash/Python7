@@ -1,28 +1,51 @@
-# Місце для вашого коду
-# Будь ласка, видаліть цей коментар та напишіть тут код для вашого варіанту
+def process_data():
+    filename_in = "data1.txt"
 
-# Приклад: Демонстраційний код
-# Ви можете видалити або закоментувати цей код перед тим, як писати свій
-try:
-    # Спроба відкрити файл input.txt для читання
-    # 'with' гарантує, що файл буде автоматично закритий
-    with open("input.txt", "r", encoding="utf-8") as file:
-        content = file.read()
-        print("Вміст файлу input.txt:")
-        print(content)
-except FileNotFoundError:
-    # Обробка помилки, якщо файл не знайдено
-    print("Помилка: Файл 'input.txt' не знайдено!")
-    # Створюємо файл, щоб уникнути помилки при наступних запусках
-    with open("input.txt", "w", encoding="utf-8") as file:
-        file.write("Це демонстраційний вміст файлу input.txt.")
-    print("Створено новий файл 'input.txt' з демонстраційним вмістом.")
-except IOError as e:
-    # Обробка інших помилок вводу/виводу
-    print(f"Помилка читання файлу: {e}")
+    #читання файлу та сума
+    try:
+        with open(filename_in, "r", encoding="utf-8") as file:
+            lines = file.readlines()
+            numbers = []
+            for line in lines:
+                cleaned_line = line.strip()
+                if cleaned_line:
+                    numbers.append(int(cleaned_line))
 
-print("\n" + "="*30 + "\n") # Розділювач для кращої читабельності
+        total_sum = sum(numbers)
+        print(f"[INFO] З файлу '{filename_in}' прочитано {len(numbers)} чисел.")
+        print(f"[INFO] Сума всіх чисел: {total_sum}")
 
-# Тут починайте писати код для вашого варіанту
-# Не забудьте створити відповідні файли з даними (наприклад, data1.txt, names.txt, і т.д.)
-# відповідно до вашого завдання.
+        #запит порога и запис в filtered_data1.txt
+        user_threshold_str = input("Введіть поріг для фільтрації чисел: ")
+        user_threshold = int(user_threshold_str)
+
+        filtered_numbers = [n for n in numbers if n > user_threshold]
+        filename_out = "filtered_data1.txt"
+
+        with open(filename_out, "w", encoding="utf-8") as file_out:
+            for num in filtered_numbers:
+                file_out.write(f"{num}\n")
+        print(f"[INFO] У файл '{filename_out}' записано {len(filtered_numbers)} чисел, більших за {user_threshold}.")
+
+        #парні числа
+        target_filename = input("Введіть ім'я файлу, який хочете відфільтрувати за парністю (напр. data1.txt): ")
+
+        with open(target_filename, "r", encoding="utf-8") as target_file:
+            target_lines = target_file.readlines()
+            target_numbers = [int(line.strip()) for line in target_lines if line.strip()]
+
+            even_numbers = [n for n in target_numbers if n % 2 == 0]
+            print(f"[INFO] З файлу '{target_filename}' прочитано та відфільтровано парні числа:")
+            print(*even_numbers)
+
+    except FileNotFoundError:
+        print(f"[ERROR] Файл не знайдено!")
+    except ValueError:
+        print(f"[ERROR] Помилка: у файлі містяться не лише числа або введено некоректне значення!")
+    except IOError as e:
+        print(f"[ERROR] Помилка введення-виведення (IOError): {e}")
+
+
+if __name__ == "__main__":
+    process_data()
+    print("Роботу завершено.")
